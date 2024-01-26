@@ -1,0 +1,87 @@
+{#
+Text Stack
+
+Usage:
+{% include "_components/text-stack.twig" with { props: {
+  heading: block.heading,
+  richText: block.richText,
+  ctaLink: block.ctaLink,
+} } only %}
+
+#}
+
+{% set props = {
+  heading: null,
+  headingSize: 'h2',
+  headingTag: 'h2',
+  richText: null,
+  richTextSize: 'lg',
+  ctaLink: null,
+  wrapper: true,
+  wrapperClass: null,
+} | merge(props ?? {}) %}
+
+{% if props.wrapper %}
+  {% set wrapperAttributes = {
+    class: props.wrapperClass,
+  } | merge(props.wrapperAttributes ?? {}) %}
+
+  <div {{ attr(wrapperAttributes) }}>
+{% endif %}
+
+  {# Heading #}
+  {%- if heading -%}
+    {% switch props.headingSize %}
+      {% case "jumbo" %}
+        {% set headingTypeClass = 'type-jumbo' %}
+      {% case "h1" %}
+        {% set headingTypeClass = 'type-h1' %}
+      {% case "h3" %}
+        {% set headingTypeClass = 'type-h3' %}
+      {% default %}
+        {% set headingTypeClass = 'type-h2' %}
+    {% endswitch %}
+
+    {{- tag(props.headingTag, {
+      class: headingTypeClass ~ ' text-theme-heading-color',
+      html: props.heading | typogrify,
+    }) -}}
+  {%- endif -%}
+
+  {# Rich Text #}
+  {%- if props.richText -%}
+    {% switch props.richTextSize %}
+      {% case "sm" %}
+        {% set richTextTypeClass = 'text-sm' %}
+      {% case "md" %}
+        {% set richTextTypeClass = 'text-md' %}
+      {% case "xl" %}
+        {% set richTextTypeClass = 'text-xl' %}
+      {% default %}
+        {% set richTextTypeClass = 'text-lg' %}
+    {% endswitch %}
+
+    {{- tag('div', {
+      class: [
+        'rich-text',
+        richTextTypeClass,
+        props.heading ? 'mt-4' : null,
+      ] | filter | join(' '),
+      html: props.richText | typogrify,
+    }) -}}
+  {%- endif -%}
+
+  {# CTA Link #}
+  {%- if props.ctaLink and props.ctaLink.url -%}
+    <div class="mt-auto pt-6">
+      {% include "_components/button.twig" with { props: {
+        text: props.ctaLink.text,
+        url: props.ctaLink.url,
+        theme: props.ctaLink.theme,
+      } } only %}
+    </div>
+  {%- endif -%}
+
+{% if props.wrapper %}
+  </div>
+{% endif %}

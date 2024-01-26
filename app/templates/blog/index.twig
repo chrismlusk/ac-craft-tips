@@ -1,0 +1,49 @@
+{# ================================================================ #}
+{# Blog Index
+{# - `/blog`
+{# ================================================================ #}
+{% extends "_layouts/site-layout.twig" %}
+
+{% set paginationCount = 8 %}
+
+{# Prepare the initial entry query #}
+{% set entryQuery = craft.entries
+  .section('blog')
+  .with(['featuredImage', 'topics'])
+  .orderBy('postDate DESC') %}
+
+{# Set the first entry as the featured item #}
+{% set featuredEntry = clone(entryQuery).limit(1).one() %}
+
+{# Modify the query to exclude the featured item #}
+{% set entryQuery = entryQuery.id('not ' ~ featuredEntry.id) %}
+
+
+{# ========================================================================== #}
+{# Output
+{# ========================================================================== #}
+{% block content %}
+  {% paginate entryQuery.limit(paginationCount) as pageInfo, blogEntries %}
+
+  <h1 class="type-h1">
+    {{- entry.pageTitle ?? ('Blog' | t) -}}
+  </h1>
+
+  {% if pageInfo.currentPage == 1 and featuredEntry %}
+    Render featured blog post entry ...
+  {% endif %}
+
+  <div class="grid grid-cols-4 gap-8">
+    {% for blogEntry in blogEntries %}
+      {% include "_components/blog-card.twig" with { props: {
+        cardSize: 'sm',
+        entry: blogEntry,
+        showImage: false,
+      } } only %}
+    {% endfor %}
+  </div>
+
+  {% include "_components/pagination.twig" with { props: {
+    pageInfo: pageInfo,
+  } } only %}
+{% endblock %}

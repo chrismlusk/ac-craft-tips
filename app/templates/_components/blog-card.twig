@@ -1,0 +1,61 @@
+{#
+Blog Card
+
+Usage:
+{% include "_components/blog-card.twig" with { props: {
+  cardClass: '',
+  cardSize: 'sm' | 'md' | 'lg',
+  entry: entry,
+  showImage: true,
+} } only %}
+#}
+
+{% set props = {
+  cardClass: 'flex flex-col gap-5 bg-theme-bg-color text-theme-color',
+  cardSize: 'md',
+  entry: null,
+  showImage: true,
+} | merge(props ?? {}) %}
+
+{% if not props.entry %}
+  {% return null %}
+{% endif %}
+
+{% set cardSizeClass = {
+  sm: 'p-3 text-sm',
+  md: 'p-4 text-md',
+  lg: 'p-5 md:p-8 text-lg',
+} %}
+
+{% set cardClass = [
+  props.cardClass,
+  cardSizeClass[props.cardSize],
+] | join(', ') %}
+
+<div class="{{ cardClass }}">
+  {% if props.showImage %}
+    {% include "_components/cardImage.twig" with { props: {
+      asset: props.entry.featuredImage.collect().first(),
+    } } only %}
+  {% endif %}
+  <div>
+    <h3 class="type-h3">
+      {{- props.entry.title -}}
+    </h3>
+    <div class="mt-2 font-bold">
+      {{- props.entry.topics.collect() | join(', ') -}}
+    </div>
+    {% if props.entry.summary %}
+      <div class="mt-4 text-sm">
+        {{- props.entry.summary -}}
+      </div>
+    {% endif %}
+    <div class="mt-6">
+      {% include "_components/button.twig" with { props: {
+        text: 'Read More' | t,
+        url: props.entry.url,
+        theme: 'secondary',
+      } } only %}
+    </div>
+  </div>
+</div>

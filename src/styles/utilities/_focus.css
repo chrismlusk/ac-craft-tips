@@ -1,0 +1,13 @@
+@layer utilities {
+  .focus-style {
+    @mixin focus-style;
+  }
+
+  .focus-style-inset {
+    @mixin focus-style-inset;
+  }
+
+  .focus-style-keyboard-only {
+    @mixin focus-style-keyboard-only;
+  }
+}

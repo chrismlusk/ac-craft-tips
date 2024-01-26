@@ -1,0 +1,11 @@
+* {
+  @mixin focus-style;
+}
+
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,9 @@
+/* @font-face {
+  font-display: fallback;
+  font-family: "Font Name";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url("{{ assetBaseUrl }}dist/FontName-Style.woff2") format("woff2"),
+    url("{{ assetBaseUrl }}dist/FontName-Style.woff") format("woff");
+} */

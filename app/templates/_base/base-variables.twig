@@ -1,0 +1,27 @@
+{# -- Root global variables that all templates inherit from -- #}
+{# -- This allows for defining site-wide Twig variables as needed -- #}
+{#
+  ┌─────────────────────────────────────────────────────────┐
+  │                        htmlPage                         │
+  │                                                         │
+  └─────────────────────────────────────────────────────────┘
+#}
+
+{# -- Prefetch & preconnect headers and links -- #}
+{% set prefetchUrls = [] %}
+{% if not devMode and developer.preconnectUrls|length %}
+  {% for row in developer.preconnectUrls %}
+    {% if row.url|length %}
+      {% set prefetchUrls = prefetchUrls|merge([row.url]) %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{# -- Fonts to preload -- #}
+{% set preloadFonts = [] %}
+
+{# -- General variables -- #}
+{% set assetsUrl = alias('@assetsUrl') ~ '/' %}
+
+{# -- Twig output from the render; this must be in a block -- #}
+{% block htmlPage %}{% endblock %}

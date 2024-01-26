@@ -1,0 +1,34 @@
+@define-mixin theme-focus-style-declarations {
+  outline-color: var(--theme-focus-outline-color);
+  outline-offset: var(--theme-focus-outline-offset);
+  outline-style: solid;
+  outline-width: var(--theme-focus-outline-width);
+}
+
+@define-mixin theme-focus-style-inset-declarations {
+  @mixin theme-focus-style-declarations;
+  outline-offset: calc(-2 * var(--theme-focus-outline-width));
+}
+
+@define-mixin focus-style {
+  &:focus {
+    @mixin theme-focus-style-declarations;
+  }
+}
+
+@define-mixin focus-style-inset {
+  &:focus {
+    @mixin theme-focus-style-inset-declarations;
+  }
+}
+
+/**
+ * Focus indicator when element has keyboard focus only.
+ * Per `_html.css`, everything starts with a visible focus indicator.
+ * So, this mixin removes the focus indicator for mouse-only users.
+ */
+@define-mixin focus-style-keyboard-only {
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}

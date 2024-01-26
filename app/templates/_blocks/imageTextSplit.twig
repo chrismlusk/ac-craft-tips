@@ -1,0 +1,28 @@
+{% embed "_base/base-section.twig" with {
+  wrapperClass: [
+    'flex flex-wrap justify-between items-center gap-8',
+    block.imagePosition == 'right' ? 'flex-row-reverse',
+  ] | filter | join(' '),
+} %}
+  {% block wrapper %}
+    {# Image #}
+    <div class="flex-1">
+      {% include "_components/image.twig" with { props: {
+        asset: block.image.one(),
+        transform: '4x3',
+      } } only %}
+    </div>
+
+    {# Text Content #}
+    <div class="flex-1">
+      {% include "_components/text-stack.twig" with { props: {
+        heading: block.heading,
+        headingSize: 'h2',
+        headingTag: 'h2',
+        richText: block.richText,
+        richTextSize: 'xl',
+        ctaLink: block.ctaLink,
+      } } only %}
+    </div>
+  {% endblock %}
+{% endembed %}

@@ -1,0 +1,133 @@
+{# -- Base layout template that all HTML requests inherit -- #}
+{#
+  ┌─────────────────────────────────────────────────────────┐
+  │                         htmlTag                         │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────┐
+  │                       headContent                       │
+  │                                                         │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                      headMeta                       │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                      headLinks                      │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                        headJs                       │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                       headCss                       │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────┐
+  │                       bodyContent                       │
+  │                                                         │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                      bodyHtml                       │ │
+  │ │                                                     │ │
+  │ │ ┌─────────────────────────────────────────────────┐ │ │
+  │ │ │                   siteHeader                    │ │ │
+  │ │ └─────────────────────────────────────────────────┘ │ │
+  │ │                                                     │ │
+  │ │ ┌─────────────────────────────────────────────────┐ │ │
+  │ │ │                    siteMain                     │ │ │
+  │ │ │                                                 │ │ │
+  │ │ │ ┌─────────────────────────────────────────────┐ │ │ │
+  │ │ │ │                   mainTag                   │ │ │ │
+  │ │ │ └─────────────────────────────────────────────┘ │ │ │
+  │ │ │ ┌─────────────────────────────────────────────┐ │ │ │
+  │ │ │ │                   content                   │ │ │ │
+  │ │ │ └─────────────────────────────────────────────┘ │ │ │
+  │ │ └─────────────────────────────────────────────────┘ │ │
+  │ │                                                     │ │
+  │ │ ┌─────────────────────────────────────────────────┐ │ │
+  │ │ │                   siteFooter                    │ │ │
+  │ │ └─────────────────────────────────────────────────┘ │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  │                                                         │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                       bodyJs                        │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  └─────────────────────────────────────────────────────────┘
+#}
+{% extends craft.app.request.isAjax() and not craft.app.request.getIsPreview()
+  ? "_base/base-ajax-layout.twig"
+  : "_base/base-web-layout.twig"
+%}
+
+{# -- Page content in the `<head>` -- #}
+{% block headContent %}
+
+  {# -- Any `<meta>` tags in the `<head>` -- #}
+  {% block headMeta %}{% endblock headMeta %}
+
+  {# -- Any `<link>` tags in the `<head>` -- #}
+  {% block headLinks %}{% endblock headLinks %}
+
+  {# -- Any JavaScript in the `<head>` -- #}
+  {% block headJs %}{% endblock headJs %}
+
+  {# -- Any inline CSS in the `<head>` -- #}
+  <style>
+    {% block headCss %}{% endblock headCss %}
+  </style>
+{% endblock headContent %}
+
+{# -- The opening `<body>` tag -- #}
+{% block bodyTag %}
+  <body
+    class="antialiased text-optimize-speed font-sans text-theme-color bg-theme-bg-color"
+    data-color-theme="light"
+    id="site"
+    {{ attr(bodyAttributes ?? {}) }}
+  >
+{% endblock %}
+
+{# -- Page content in the `<body>` -- #}
+{% block bodyContent %}
+
+  {# -- Primary `<body>` content -- #}
+  {% block bodyHtml %}
+    <a class="skip-link" href="#site-main">{{ 'Skip to content' | t }}</a>
+
+    {# -- Site Header -- #}
+    {% block siteHeader %}{% endblock %}
+
+    {# -- Site Main -- #}
+    {% block siteMain %}
+
+      {# -- The opening `<main>` tag -- #}
+      {% block mainTag %}
+        <main
+          id="site-main"
+          class="focus:outline-none"
+          tabindex="-1"
+          {{ attr(mainAttributes ?? {}) }}
+        >
+      {% endblock %}
+
+        {# -- Primary content -- #}
+        {% block content %}
+          <code>No content block defined.</code>
+        {% endblock %}
+      </main>
+    {% endblock siteMain %}
+
+    {# -- Site Footer -- #}
+    {% block siteFooter %}{% endblock %}
+  {% endblock bodyHtml %}
+
+  {# -- Global JavaScript -- #}
+  {% js %}
+    window.GLOBAL = {
+      BASE_URL: '{{ siteUrl }}',
+      ENVIRONMENT: '{{ getenv('ENVIRONMENT') }}',
+      SITE_NAME: '{{ currentSite.name }}',
+    };
+  {% endjs %}
+
+  {# -- Any JS at the end of the `<body>` -- #}
+  {% block bodyJs %}{% endblock bodyJs %}
+{% endblock bodyContent %}

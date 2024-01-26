@@ -1,0 +1,13 @@
+.lazyload,
+.lazyloading {
+  opacity: 0.001;
+}
+
+.lazyloaded {
+  opacity: 1;
+  transition: opacity .15s;
+}
+
+.no-js .lazyload {
+  display: none;
+}

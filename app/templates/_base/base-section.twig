@@ -1,0 +1,86 @@
+{# -- Base section -- #}
+{#
+  ┌─────────────────────────────────────────────────────────┐
+  │                         section                         │
+  │                                                         │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                       wrapper                       │ │
+  │ │                                                     │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  └─────────────────────────────────────────────────────────┘
+
+  {% embed "_base/base-section.twig" with {
+    sectionAttributes: {},
+    sectionColorTheme: 'light' | 'dark' | 'neutral',
+    sectionExtraClass: '',
+    sectionId: '',
+    sectionSpacing: 'md' | 'sm' | 'lg' | 'none',
+    wrapperAttributes: {},
+    wrapperClass: '',
+    wrapperSize: 'md' | 'sm' | 'lg' | 'none',
+  } %}
+    {% block section %} // or `wrapper` or `banner`, depends on the layout
+      ...
+    {% endblock %}
+  {% endembed %}
+#}
+
+
+{# =============================================================== #}
+{# Section options
+{# =============================================================== #}
+{% set sectionId = sectionId ?? block.sectionId ?? null %}
+
+{% set sectionSpacingMap = {
+  none: '',
+  sm: 'py-5 lg:py-8',
+  md: 'py-8 md:py-10 xl:py-12',
+  lg: 'py-10 lg:py-14 xl:py-18',
+} %}
+
+{% set sectionClass = [
+  'section',
+  sectionSpacingMap[sectionSpacing ?? block.sectionSpacing.value ?? 'md'],
+  sectionExtraClass ?? null,
+  'text-theme-color bg-theme-bg-color',
+]|filter|join(' ') %}
+
+{% set sectionAttributes = {
+  class: sectionClass,
+  'data-color-theme': sectionColorTheme ?? block.sectionColorTheme ?? 'light',
+  id: sectionId ?? null,
+  tabindex: sectionId ? '-1' : null,
+} %}
+
+
+{# =============================================================== #}
+{# Wrapper options
+{# =============================================================== #}
+{% set wrapperSizeMap = {
+  sm: 'wrapper--sm',
+  md: 'wrapper--md',
+  lg: 'wrapper--lg',
+} %}
+
+{% set wrapperClass = [
+  'wrapper',
+  wrapperSizeMap[wrapperSize ?? block.wrapperSize.value ?? 'md'],
+  wrapperExtraClass ?? null,
+]|filter|join(' ') %}
+
+{% set wrapperAttributes = {
+  class: wrapperClass,
+}|merge(wrapperAttributes ?? {}) %}
+
+
+{# =============================================================== #}
+{# Output
+{# =============================================================== #}
+<section {{ attr(sectionAttributes) }}>
+  {% block section %}
+    <div {{ attr(wrapperAttributes) }}>
+      {% block wrapper %}
+      {% endblock wrapper %}
+    </div>
+  {% endblock section %}
+</section>

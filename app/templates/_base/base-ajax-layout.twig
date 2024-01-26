@@ -1,0 +1,20 @@
+{# -- Base layout template that all AJAX requests inherit from -- #}
+{#
+  ┌─────────────────────────────────────────────────────────┐
+  │                        htmlPage                         │
+  │                                                         │
+  │ ┌─────────────────────────────────────────────────────┐ │
+  │ │                       content                       │ │
+  │ └─────────────────────────────────────────────────────┘ │
+  └─────────────────────────────────────────────────────────┘
+#}
+{% extends "_base/base-variables.twig" %}
+
+{%- block htmlPage -%}
+  {% minify %}
+    {# -- Primary content -- #}
+    {% block content %}
+      <code>No content block defined.</code>
+    {% endblock content %}
+  {% endminify %}
+{%- endblock htmlPage -%}
